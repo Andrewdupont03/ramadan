@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ramadan Kareem — رمضان كريم</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --gold-dim: #7a6030;
+      --navy: #050d1a;
+      --deep: #010812;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Amiri', serif;
+      background: var(--deep);
+      color: #fff;
+    }
+
+    /* ── SKY ── */
+    .sky {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, #0d1f3c 0%, #050d1a 50%, #010812 100%);
+      overflow: hidden;
+    }
+
+    /* Shooting stars */
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0;
+    }
+    .shooting-star::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 80px; height: 1px;
+      background: linear-gradient(to right, rgba(255,255,255,0.8), transparent);
+    }
+    @keyframes shoot {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      5%   { opacity: 1; }
+      100% { opacity: 0; transform: translate(300px, 150px); }
+    }
+
+    /* Stars */
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--d, 3s) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: var(--op, 0.9); transform: scale(1.3); }
+    }
+
+    /* Aurora / nebula glow */
+    .aurora {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background:
+        radial-gradient(ellipse 60% 30% at 30% 20%, rgba(10,61,74,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 25% at 70% 30%, rgba(40,20,80,0.25) 0%, transparent 70%);
+      animation: auroraShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes auroraShift {
+      0% { opacity: 0.6; transform: scaleX(1); }
+      100% { opacity: 1; transform: scaleX(1.08); }
+    }
+
+    /* Crescent moon */
+    .moon-wrap {
+      position: absolute;
+      top: 6vh; right: 10vw;
+      animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-14px); }
+    }
+    .moon {
+      width: 90px; height: 90px;
+      position: relative;
+    }
+    .moon::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: var(--gold-light);
+      box-shadow:
+        0 0 40px 20px rgba(201,168,76,0.5),
+        0 0 100px 50px rgba(201,168,76,0.2),
+        0 0 200px 80px rgba(201,168,76,0.08);
+      animation: moonPulse 4s ease-in-out infinite;
+    }
+    @keyframes moonPulse {
+      0%, 100% { box-shadow: 0 0 40px 20px rgba(201,168,76,0.5), 0 0 100px 50px rgba(201,168,76,0.2), 0 0 200px 80px rgba(201,168,76,0.08); }
+      50% { box-shadow: 0 0 60px 30px rgba(201,168,76,0.7), 0 0 130px 70px rgba(201,168,76,0.3), 0 0 250px 100px rgba(201,168,76,0.12); }
+    }
+    .moon::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: 16px;
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: var(--navy);
+    }
+    .moon-star {
+      position: absolute;
+      top: 18px; right: -22px;
+      font-size: 18px;
+      color: var(--gold-light);
+      text-shadow: 0 0 12px rgba(240,208,128,0.8);
+      animation: starSpin 6s ease-in-out infinite;
+    }
+    @keyframes starSpin {
+      0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.3) rotate(20deg); }
+    }
+
+    /* Floating particles (dust/sparkles) */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.9), transparent);
+      animation: particleDrift var(--pd, 8s) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes particleDrift {
+      0%   { opacity: 0; transform: translate(0, 0) scale(0.5); }
+      20%  { opacity: 0.8; }
+      80%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translate(var(--dx, 30px), var(--dy, -80px)) scale(1.2); }
+    }
+
+    /* Mosque silhouette */
+    .mosque {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: min(700px, 100vw);
+      height: 42vh;
+      animation: mosqueGlow 5s ease-in-out infinite alternate;
+    }
+    @keyframes mosqueGlow {
+      0% { filter: drop-shadow(0 -6px 20px rgba(201,168,76,0.06)); }
+      100% { filter: drop-shadow(0 -6px 50px rgba(201,168,76,0.18)); }
+    }
+    .mosque svg {
+      width: 100%; height: 100%;
+      fill: #030b18;
+    }
+
+    /* Windows glowing in mosque */
+    .mosque-window {
+      fill: rgba(201,168,76,0.15);
+      animation: windowGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes windowGlow {
+      0% { fill: rgba(201,168,76,0.08); }
+      100% { fill: rgba(201,168,76,0.35); }
+    }
+
+    /* Ground glow */
+    .ground-glow {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 30vh;
+      background: linear-gradient(to top, rgba(201,168,76,0.07) 0%, transparent 100%);
+      animation: groundPulse 6s ease-in-out infinite;
+    }
+    @keyframes groundPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1.2; }
+    }
+
+    /* Geometric border overlay */
+    .geo-border {
+      position: fixed; inset: 16px;
+      border: 1px solid rgba(201,168,76,0.2);
+      pointer-events: none;
+      z-index: 5;
+      animation: borderBreath 4s ease-in-out infinite;
+    }
+    @keyframes borderBreath {
+      0%, 100% { border-color: rgba(201,168,76,0.15); }
+      50% { border-color: rgba(201,168,76,0.35); }
+    }
+    .geo-border::before {
+      content: '';
+      position: absolute; inset: 6px;
+      border: 1px solid rgba(201,168,76,0.08);
+    }
+    .corner {
+      position: absolute;
+      width: 30px; height: 30px;
+      border-color: var(--gold);
+      border-style: solid;
+      animation: cornerPulse 4s ease-in-out infinite;
+    }
+    @keyframes cornerPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+    }
+    .corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+    .corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+    .corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+    /* Rotating geometric mandala behind text */
+    .mandala {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px; height: 500px;
+      opacity: 0.04;
+      animation: rotateMandala 40s linear infinite;
+      pointer-events: none;
+      z-index: 6;
+    }
+    @keyframes rotateMandala {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10;
+      gap: 0;
+      padding-bottom: 8vh;
+    }
+
+    .bismillah {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 0.3s;
+      text-shadow: 0 0 30px rgba(201,168,76,0.5);
+      direction: rtl;
+      position: relative;
+    }
+    .bismillah::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: 50%; transform: translateX(-50%);
+      width: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      animation: lineExpand 2s ease forwards 1.5s;
+    }
+    @keyframes lineExpand {
+      to { width: 100%; }
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 18px 0 14px;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 0.7s;
+    }
+    .divider-line {
+      width: clamp(60px, 12vw, 140px);
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .divider-diamond {
+      width: 7px; height: 7px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 8px rgba(201,168,76,0.8);
+      animation: diamondPulse 2s ease-in-out infinite;
+    }
+    @keyframes diamondPulse {
+      0%, 100% { transform: rotate(45deg) scale(1); box-shadow: 0 0 8px rgba(201,168,76,0.8); }
+      50% { transform: rotate(45deg) scale(1.4); box-shadow: 0 0 18px rgba(201,168,76,1); }
+    }
+
+    .title-main {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, #f0d080 0%, #c9a84c 50%, #a07820 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      filter: drop-shadow(0 0 30px rgba(201,168,76,0.5));
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 1s, titleShimmer 4s ease-in-out infinite 2.5s;
+    }
+    @keyframes titleShimmer {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.4)); }
+      50% { filter: drop-shadow(0 0 50px rgba(201,168,76,0.8)) drop-shadow(0 0 80px rgba(201,168,76,0.3)); }
+    }
+
+    .title-arabic {
+      font-family: 'Amiri', serif;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      color: var(--gold-light);
+      direction: rtl;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 1.3s;
+      text-shadow: 0 0 25px rgba(240,208,128,0.4);
+      margin-top: 4px;
+    }
+
+    .divider2 {
+      margin: 20px 0 18px;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 1.6s;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .text-body {
+      max-width: min(680px, 88vw);
+      text-align: center;
+      font-family: 'Amiri', serif;
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      line-height: 1.85;
+      color: rgba(220, 200, 160, 0.88);
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 1.9s;
+    }
+    .text-body em {
+      color: var(--gold-light);
+      font-style: italic;
+    }
+
+    .arabic-dua {
+      margin-top: 22px;
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      color: var(--gold);
+      direction: rtl;
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 2.2s;
+      text-shadow: 0 0 20px rgba(201,168,76,0.3);
+      line-height: 2;
+    }
+
+    .badge {
+      margin-top: 28px;
+      display: inline-block;
+      border: 1px solid rgba(201,168,76,0.35);
+      padding: 8px 28px;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(0.55rem, 1.2vw, 0.75rem);
+      letter-spacing: 0.25em;
+      color: rgba(201,168,76,0.65);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 2.5s;
+      position: relative;
+      overflow: hidden;
+    }
+    .badge::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.1), transparent);
+      animation: badgeSweep 3s ease-in-out infinite 3s;
+    }
+    @keyframes badgeSweep {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Lanterns */
+    .lanterns {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+      pointer-events: none; z-index: 4;
+      padding: 0 4vw;
+    }
+    .lantern {
+      display: flex; flex-direction: column; align-items: center;
+      animation: sway var(--sw, 5s) ease-in-out infinite;
+      transform-origin: top center;
+    }
+    .lantern:nth-child(1) { --sw: 5s; opacity: 0.8; }
+    .lantern:nth-child(2) { --sw: 7s; opacity: 0.5; animation-delay: -2s; }
+    .lantern:nth-child(3) { --sw: 4.5s; opacity: 0.8; animation-delay: -1s; }
+    @keyframes sway {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+    .lantern-string {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.4));
+    }
+    .lantern-body {
+      width: 22px; height: 34px;
+      background: linear-gradient(180deg, rgba(201,168,76,0.15) 0%, rgba(201,168,76,0.05) 100%);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 3px 3px 6px 6px;
+      position: relative;
+      animation: lanternGlow 3s ease-in-out infinite var(--lg-delay, 0s);
+    }
+    @keyframes lanternGlow {
+      0%, 100% { box-shadow: 0 0 12px 4px rgba(201,168,76,0.1); }
+      50% { box-shadow: 0 0 25px 12px rgba(201,168,76,0.35); }
+    }
+    .lantern-body::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(240,208,128,0.9);
+      animation: flicker 0.15s ease-in-out infinite alternate;
+    }
+    @keyframes flicker {
+      0% { box-shadow: 0 0 8px 4px rgba(240,208,128,0.5); opacity: 0.8; }
+      100% { box-shadow: 0 0 16px 8px rgba(240,208,128,0.7); opacity: 1; }
+    }
+
+    /* Calligraphic ring pulse around title */
+    .ring {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -52%);
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.1);
+      pointer-events: none;
+      z-index: 7;
+      animation: ringExpand var(--rDur, 6s) ease-out infinite var(--rDelay, 0s);
+    }
+    @keyframes ringExpand {
+      0%   { opacity: 0.6; transform: translate(-50%, -52%) scale(0.6); }
+      100% { opacity: 0; transform: translate(-50%, -52%) scale(2); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sky">
+  <div class="aurora"></div>
+  <div id="stars"></div>
+  <div id="shooting-stars"></div>
+  <div id="particles"></div>
+
+  <!-- Moon -->
+  <div class="moon-wrap">
+    <div class="moon"></div>
+    <div class="moon-star">★</div>
+  </div>
+
+  <div class="ground-glow"></div>
+
+  <!-- Mosque silhouette -->
+  <div class="mosque">
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+      <ellipse cx="350" cy="160" rx="100" ry="90"/>
+      <rect x="250" y="155" width="200" height="165"/>
+      <rect x="130" y="100" width="28" height="220"/>
+      <polygon points="130,100 158,100 144,52"/>
+      <circle cx="144" cy="50" r="5"/>
+      <rect x="542" y="100" width="28" height="220"/>
+      <polygon points="542,100 570,100 556,52"/>
+      <circle cx="556" cy="50" r="5"/>
+      <rect x="175" y="195" width="75" height="125"/>
+      <ellipse cx="212" cy="195" rx="37" ry="30"/>
+      <rect x="450" y="195" width="75" height="125"/>
+      <ellipse cx="488" cy="195" rx="37" ry="30"/>
+      <rect x="80" y="310" width="540" height="10"/>
+      <!-- glowing windows -->
+      <ellipse class="mosque-window" cx="350" cy="240" rx="22" ry="28"/>
+      <rect class="mosque-window" x="328" y="240" width="44" height="40"/>
+      <ellipse class="mosque-window" style="animation-delay:1.5s" cx="212" cy="245" rx="14" ry="18"/>
+      <rect class="mosque-window" style="animation-delay:1.5s" x="198" y="245" width="28" height="25"/>
+      <ellipse class="mosque-window" style="animation-delay:0.8s" cx="488" cy="245" rx="14" ry="18"/>
+      <rect class="mosque-window" style="animation-delay:0.8s" x="474" y="245" width="28" height="25"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Pulse rings -->
+<div class="ring" style="width:340px;height:340px; --rDur:6s; --rDelay:0s;"></div>
+<div class="ring" style="width:340px;height:340px; --rDur:6s; --rDelay:2s;"></div>
+<div class="ring" style="width:340px;height:340px; --rDur:6s; --rDelay:4s;"></div>
+
+<!-- Mandala -->
+<svg class="mandala" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#c9a84c" stroke-width="0.5" fill="none" transform="translate(100,100)">
+    <circle r="90"/><circle r="70"/><circle r="50"/><circle r="30"/>
+    <line x1="-90" y1="0" x2="90" y2="0"/>
+    <line x1="0" y1="-90" x2="0" y2="90"/>
+    <line x1="-64" y1="-64" x2="64" y2="64"/>
+    <line x1="64" y1="-64" x2="-64" y2="64"/>
+    <polygon points="0,-85 49,42 -49,42" opacity="0.5"/>
+    <polygon points="0,85 49,-42 -49,-42" opacity="0.5"/>
+    <polygon points="0,-60 35,30 -35,30" opacity="0.4"/>
+    <polygon points="0,60 35,-30 -35,-30" opacity="0.4"/>
+  </g>
+</svg>
+
+<!-- Lanterns -->
+<div class="lanterns">
+  <div class="lantern">
+    <div class="lantern-string"></div>
+    <div class="lantern-body"></div>
+  </div>
+  <div class="lantern">
+    <div class="lantern-string"></div>
+    <div class="lantern-body" style="--lg-delay:1s"></div>
+  </div>
+  <div class="lantern">
+    <div class="lantern-string"></div>
+    <div class="lantern-body" style="--lg-delay:0.5s"></div>
+  </div>
+</div>
+
+<!-- Decorative border -->
+<div class="geo-border">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+</div>
+
+<!-- Main content -->
+<div class="content">
+  <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="title-main">Ramadan Kareem</div>
+  <div class="title-arabic">رَمَضَانُ كَرِيم</div>
+
+  <div class="divider2">
+    <div class="divider-line"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="text-body">
+    En ce premier jour du mois sacré, que la lumière d'<em>Allah</em> guide vos cœurs
+    et illumine vos nuits. Le Ramadan est le mois de la miséricorde, du pardon
+    et de la purification de l'âme. Que chaque prière soit exaucée,
+    que chaque jeûne soit accepté, et que la paix descende sur vous
+    comme la rosée du matin.
+  </div>
+
+  <div class="arabic-dua">
+    رَمَضَانَ مُبَارَكُ — تَقَبَّلَ اللَّهُ مِنَّا وَمِنكُم
+  </div>
+
+  <div class="badge">☽ Que ce mois béni vous apporte sérénité &amp; lumière ☽</div>
+</div>
+
+<script>
+  // ── Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 220; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.position = 'absolute';
+    const size = Math.random() * 2.8 + 0.4;
+    s.style.cssText = `
+      position:absolute;
+      left:${Math.random()*100}%;
+      top:${Math.random()*72}%;
+      width:${size}px; height:${size}px;
+      border-radius:50%;
+      background:#fff;
+      animation: twinkle ${2+Math.random()*4}s ease-in-out infinite;
+      animation-delay:${Math.random()*6}s;
+      --op:${0.3+Math.random()*0.7};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ── Shooting stars
+  const ssEl = document.getElementById('shooting-stars');
+  function spawnShootingStar() {
+    const el = document.createElement('div');
+    el.className = 'shooting-star';
+    el.style.left = (Math.random()*60+5) + '%';
+    el.style.top  = (Math.random()*35+5) + '%';
+    el.style.animation = `shoot ${0.8+Math.random()*0.6}s ease-out forwards`;
+    ssEl.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+  setInterval(spawnShootingStar, 2800);
+  setTimeout(spawnShootingStar, 1000);
+
+  // ── Particles
+  const partEl = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const sz = Math.random()*4+1;
+    const dur = 6+Math.random()*8;
+    const dx = (Math.random()-0.5)*100;
+    const dy = -(40+Math.random()*100);
+    p.style.cssText = `
+      position:absolute;
+      left:${Math.random()*100}%;
+      top:${30+Math.random()*55}%;
+      width:${sz}px; height:${sz}px;
+      animation: particleDrift ${dur}s ease-in-out infinite;
+      animation-delay:${Math.random()*8}s;
+      --dx:${dx}px; --dy:${dy}px; --pd:${dur}s;
+    `;
+    partEl.appendChild(p);
+  }
+</script>
+</body>
+</html>
